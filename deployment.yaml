@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-app
+  template:
+    metadata:
+      labels:
+        app: demo-app
+    spec:
+      containers:
+      - name: demo-app
+        image: public.ecr.aws/i5t0v8v6/gokulshankar:5
+        ports:
+        - containerPort: 8080
+        env:
+        - name: DB_HOST
+          value: database-5.cm0y0lo0ur7o.us-east-2.rds.amazonaws.com
+        - name: DB_PORT
+          value: "5432"
+        - name: DB_NAME
+          value: orders
+        volumeMounts:
+        - name: db-secrets-rds
+          mountPath: /mnt/secrets/db
+          readOnly: true
+      volumes:
+      - name: db-secrets-rds
+        secret:
+          secretName: db-secrets-rds
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-app
+spec:
+  selector:
+    app: demo-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+
