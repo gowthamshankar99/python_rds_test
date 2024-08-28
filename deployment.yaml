@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: demo-app
-        image: public.ecr.aws/i5t0v8v6/gokulshankar:5
+        image: public.ecr.aws/i5t0v8v6/gokulshankar:7
         ports:
         - containerPort: 8080
         env:
